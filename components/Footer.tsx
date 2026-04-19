@@ -1,4 +1,4 @@
-import { Github, ExternalLink } from "lucide-react";
+import { ExternalLink } from "lucide-react";
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();
@@ -20,8 +20,8 @@ export default function Footer() {
               </span>
             </div>
             <p className="text-xs text-text-muted max-w-xs">
-              Free x402 payment facilitator by Zypto. We cover gas. You receive
-              in full.
+              Free x402 payment facilitator by the Zypto Community Initiative.
+              We cover gas. You receive in full.
             </p>
           </div>
 
@@ -60,18 +60,19 @@ export default function Footer() {
         <div className="border-t border-border pt-6">
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
             <p className="text-xs text-text-muted">
-              Built by{" "}
-              <span className="text-primary font-medium">Zypto</span> · Powered
-              by{" "}
+              Built by the{" "}
+              <span className="text-primary font-medium">Zypto Community Initiative</span> ·
+              Powered by{" "}
               <span className="text-secondary font-medium">x402</span>
             </p>
             <p className="text-[10px] text-text-muted max-w-xl leading-relaxed">
-              $ZYPTO Token governed by Zypto Foundation. Not available in
-              restricted jurisdictions including Canada and UK.
+              Owned and maintained by the Zypto Community. $ZYPTO Token governed
+              by Zypto Foundation. Not available in restricted jurisdictions
+              including Canada and UK.
             </p>
           </div>
           <p className="text-xs text-text-muted mt-4">
-            © {currentYear} Zypto. All rights reserved.
+            © {currentYear} Zypto Community Initiative. All rights reserved.
           </p>
         </div>
       </div>

@@ -7,6 +7,11 @@ interface ChainCardProps {
   chainKey: keyof typeof CHAINS;
 }
 
+function truncateAddress(address: string): string {
+  if (!address) return ""
+  return `${address.slice(0, 6)}...${address.slice(-4)}`
+}
+
 export default function ChainCard({ chainKey }: ChainCardProps) {
   const chain = CHAINS[chainKey];
 
@@ -34,6 +39,31 @@ export default function ChainCard({ chainKey }: ChainCardProps) {
               </span>
             </div>
           </div>
+        </div>
+      </div>
+
+      {/* USDC info */}
+      <div className="space-y-3">
+        <div>
+          <p className="text-xs text-text-muted mb-1">USDC</p>
+          {chain.usdc ? (
+            <div className="flex items-center gap-2">
+              <code className="text-xs font-mono text-text-secondary bg-background px-2 py-1 rounded border border-border flex-1 overflow-hidden text-ellipsis">
+                {truncateAddress(chain.usdc)}
+              </code>
+              <a
+                href={`${chain.explorer}/token/${chain.usdc}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-text-muted hover:text-primary transition-colors flex-shrink-0"
+                aria-label={`View ${chain.name} USDC on explorer`}
+              >
+                <ExternalLink size={14} />
+              </a>
+            </div>
+          ) : (
+            <p className="text-xs text-text-muted italic">Coming soon</p>
+          )}
         </div>
       </div>
 
