@@ -18,7 +18,11 @@ export default function Header() {
       <div className="max-w-content mx-auto px-6 h-16 flex items-center justify-between">
         {/* Logo */}
         <a href="#" className="flex items-center gap-2 group">
-          <span className="text-2xl font-bold text-primary">Zypto</span>
+          <img
+            src="/zypto-logo.png"
+            alt="Zypto"
+            className="h-8 w-auto"
+          />
           <span className="text-sm font-mono text-text-secondary group-hover:text-primary transition-colors">
             Facilitator
           </span>

@@ -22,13 +22,14 @@ export default function Home() {
               Supported Chains
             </h2>
             <p className="text-text-secondary max-w-xl mx-auto">
-              Three chains. One API. USDC payments with zero gas fees.
+              Four chains. One API. USDC payments with zero gas fees.
             </p>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             <ChainCard chainKey="base" />
             <ChainCard chainKey="bnb" />
             <ChainCard chainKey="ethereum" />
+            <ChainCard chainKey="solana" />
           </div>
         </div>
       </section>

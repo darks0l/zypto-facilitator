@@ -20,6 +20,12 @@ export default function ChainCard({ chainKey }: ChainCardProps) {
 
   const explorerAddressUrl = `${chain.explorer}/address/${chain.pool}`;
 
+  // For Solana, use full address display since base58 is longer
+  const poolDisplay =
+    chainKey === "solana" ? chain.pool : truncateAddress(chain.pool)
+  const usdcDisplay =
+    chainKey === "solana" ? chain.usdc : truncateAddress(chain.usdc)
+
   return (
     <div className="group relative p-6 rounded-card bg-surface border border-border hover:border-primary/30 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:shadow-primary/5">
       {/* Chain logo / emoji */}
@@ -53,7 +59,7 @@ export default function ChainCard({ chainKey }: ChainCardProps) {
           <p className="text-xs text-text-muted mb-1">Pool Address</p>
           <div className="flex items-center gap-2">
             <code className="text-xs font-mono text-text-secondary bg-background px-2 py-1 rounded border border-border flex-1 overflow-hidden text-ellipsis">
-              {truncateAddress(chain.pool)}
+              {poolDisplay}
             </code>
             <button
               onClick={copyAddress}
@@ -75,6 +81,8 @@ export default function ChainCard({ chainKey }: ChainCardProps) {
             className={`inline-flex items-center px-2 py-1 rounded-badge text-xs font-mono ${
               chain.poolType === "BurnMint"
                 ? "bg-primary/10 text-primary border border-primary/20"
+                : chain.poolType === "MintBurn"
+                ? "bg-accent/10 text-accent border border-accent/20"
                 : "bg-secondary/10 text-secondary border border-secondary/20"
             }`}
           >
@@ -82,18 +90,21 @@ export default function ChainCard({ chainKey }: ChainCardProps) {
           </span>
         </div>
 
-        <div>
-          <p className="text-xs text-text-muted mb-1">Chain Selector</p>
-          <code className="text-xs font-mono text-text-secondary bg-background px-2 py-1 rounded border border-border inline-block">
-            {chain.chainSelector}
-          </code>
-        </div>
+        {/* Chain Selector — EVM only (Solana has no CCIP selector for internal settlement) */}
+        {chain.chainSelector && (
+          <div>
+            <p className="text-xs text-text-muted mb-1">Chain Selector</p>
+            <code className="text-xs font-mono text-text-secondary bg-background px-2 py-1 rounded border border-border inline-block">
+              {chain.chainSelector}
+            </code>
+          </div>
+        )}
 
         <div>
           <p className="text-xs text-text-muted mb-1">USDC Token</p>
           <div className="flex items-center gap-2">
             <code className="text-xs font-mono text-text-secondary bg-background px-2 py-1 rounded border border-border flex-1 overflow-hidden text-ellipsis">
-              {truncateAddress(chain.usdc)}
+              {usdcDisplay}
             </code>
             <a
               href={`${chain.explorer}/token/${chain.usdc}`}

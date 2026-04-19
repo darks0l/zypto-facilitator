@@ -1,14 +1,21 @@
+export type EvmPoolType = "BurnMint" | "LockRelease"
+export type SolPoolType = "MintBurn"
+
 export interface ChainConfig {
-  name: string;
-  id: number;
-  chainSelector: string;
-  usdc: string;
-  pool: string;
-  poolType: "BurnMint" | "LockRelease";
-  explorer: string;
-  explorerName: string;
-  color: string;
-  emoji: string;
+  name: string
+  id: number
+  chainSelector: string
+  usdc: string
+  pool: string
+  poolType: EvmPoolType | SolPoolType
+  explorer: string
+  explorerName: string
+  color: string
+  emoji: string
+  /** Solana-only: SPL mint address */
+  mint?: string
+  /** Solana-only: settlement program ID */
+  programId?: string
 }
 
 export const CHAINS: Record<string, ChainConfig> = {
@@ -48,11 +55,25 @@ export const CHAINS: Record<string, ChainConfig> = {
     color: "#8B61FF",
     emoji: "🟣",
   },
-};
+  solana: {
+    name: "Solana",
+    id: 1399811149,
+    chainSelector: "",
+    usdc: "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+    pool: "D9m8DMVSgLkht448sR2qQtX9rd5gphZauGmmT34Fxe1G",
+    poolType: "MintBurn",
+    explorer: "https://solscan.io",
+    explorerName: "Solscan",
+    color: "#00FFA3",
+    emoji: "🟢",
+    mint: "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+    programId: "ZyptoProgram11111111111111111111111111111111",
+  },
+}
 
-export const SUPPORTED_CHAIN_IDS = [8453, 56, 1];
+export const SUPPORTED_CHAIN_IDS = [8453, 56, 1, 1399811149]
 
 export function truncateAddress(address: string): string {
-  if (!address) return "";
-  return `${address.slice(0, 6)}...${address.slice(-4)}`;
+  if (!address) return ""
+  return `${address.slice(0, 6)}...${address.slice(-4)}`
 }

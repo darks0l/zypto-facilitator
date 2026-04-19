@@ -4,12 +4,13 @@ import { useState } from "react";
 import { Copy, Check } from "lucide-react";
 import { CHAINS } from "@/lib/chains";
 
-type TabKey = "curl" | "javascript" | "python";
+type TabKey = "curl" | "javascript" | "python" | "solana";
 
 const tabs: { key: TabKey; label: string }[] = [
   { key: "curl", label: "cURL" },
   { key: "javascript", label: "JavaScript" },
   { key: "python", label: "Python" },
+  { key: "solana", label: "Solana" },
 ];
 
 function buildCode(lang: TabKey) {
@@ -65,6 +66,25 @@ res = requests.post(
 
 data = res.json()
 print(f"Verified: {data['valid']}")`,
+
+    solana: `# Solana: verify + settle via SPL token transfer
+# chainId = 1399811149 (Solana mainnet)
+# Uses base58 addresses + base58 signature from wallet
+
+const response = await fetch('https://facilitator.zypto.com/api/verify', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({
+    chainId: 1399811149,
+    from: '7nPhtNbCGuaNicCurKJpr6KcxCMacKhxxFrwKf1hTWZY',
+    to: 'D9m8DMVSgLkht448sR2qQtX9rd5gphZauGmmT34Fxe1G',
+    value: '1000000',
+    mint: 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v'
+  })
+})
+
+const { valid, facilitator } = await response.json()
+console.log('Solana payment valid:', valid)`,
   };
   return code[lang];
 }
@@ -86,6 +106,10 @@ function highlightCode(code: string, lang: TabKey): React.ReactNode {
   } else if (lang === "python") {
     highlighted = highlighted
       .replace(/\b(import|from|requests\.post|headers|json|print)\b/g, '<span class="json-key">$1</span>');
+  } else if (lang === "solana") {
+    highlighted = highlighted
+      .replace(/\b(const|await|fetch|method|headers|body|JSON\.stringify|console\.log)\b/g, '<span class="json-key">$1</span>')
+      .replace(/\b(true|false)\b/g, '<span class="json-boolean">$1</span>');
   }
 
   // Highlight numbers
@@ -97,6 +121,12 @@ function highlightCode(code: string, lang: TabKey): React.ReactNode {
   // Highlight hex strings
   highlighted = highlighted.replace(
     /'(0x[a-fA-F0-9]{6,})'/g,
+    '<span class="json-string">\'$1\'</span>'
+  );
+
+  // Highlight base58 addresses (Solana)
+  highlighted = highlighted.replace(
+    /'([1-9A-HJ-NP-Za-km-z]{32,44})'/g,
     '<span class="json-string">\'$1\'</span>'
   );
 

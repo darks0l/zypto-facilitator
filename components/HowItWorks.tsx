@@ -6,7 +6,7 @@ const steps = [
     icon: PenTool,
     title: "Sign",
     description:
-      "User signs an EIP-3009 transferWithAuthorization for USDC. No gas. No waiting. Just a cryptographic signature.",
+      "User signs a payment authorization. EVM: EIP-3009 transferWithAuthorization. Solana: SPL token approval. No gas. No waiting.",
     color: "primary",
   },
   {
@@ -22,7 +22,7 @@ const steps = [
     icon: Rocket,
     title: "Settle",
     description:
-      "On-chain execution happens. Full amount reaches you. Gas is on us — always.",
+      "On-chain execution happens. Full amount reaches you. Gas is covered by Zypto — always.",
     color: "accent",
   },
 ];

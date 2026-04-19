@@ -9,13 +9,15 @@ interface Endpoint {
   description: string;
   request?: object;
   response?: object;
+  note?: string;
 }
 
 const endpoints: Endpoint[] = [
   {
     method: "GET",
     path: "/api/health",
-    description: "Returns service status, supported chains, and aggregate statistics.",
+    description:
+      "Returns service status, supported chains, and aggregate statistics.",
     response: {
       service: "zypto-facilitator",
       version: "1.0.0",
@@ -49,11 +51,17 @@ const endpoints: Endpoint[] = [
           pool: "0x7F8189A226093f76AEc663C9C5bf8EEA9Ad0CB71",
           poolType: "LockRelease",
         },
+        {
+          name: "Solana",
+          chainId: 1399811149,
+          status: "operational",
+          chainSelector: "",
+          usdc: "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          pool: "D9m8DMVSgLkht448sR2qQtX9rd5gphZauGmmT34Fxe1G",
+          poolType: "MintBurn",
+        },
       ],
-      totals: {
-        settlements: 12847,
-        volume: "1240000.00",
-      },
+      totals: { settlements: 12847, volume: "1240000.00" },
       endpoints: ["/api/health", "/api/verify", "/api/settle"],
       operator: "Zypto Foundation",
       website: "https://zypto.com",
@@ -62,7 +70,8 @@ const endpoints: Endpoint[] = [
   {
     method: "POST",
     path: "/api/verify",
-    description: "Verifies an EIP-3009 transferWithAuthorization without executing it. No gas required.",
+    description:
+      "Verifies a payment authorization without executing it. EVM: EIP-3009 transferWithAuthorization. Solana: SPL token approval.",
     request: {
       chainId: 8453,
       token: "0xde184c7228430cca03a4a5792234a6fc99728ef1",
@@ -75,14 +84,15 @@ const endpoints: Endpoint[] = [
     },
     response: {
       valid: true,
-      facilitator: "0x3e6e304421993D7E95a77982E11C93610DD4fFC5",
-      chain: "Base",
+      facilitator: "0x307933Cf4b8dA967A35bb8470D473b108F1b588E",
+      chain: 8453,
     },
   },
   {
     method: "POST",
     path: "/api/settle",
-    description: "Executes an EIP-3009 transferWithAuthorization on-chain. Zypto pays the gas.",
+    description:
+      "Executes a payment on-chain. EVM: submits EIP-3009. Solana: SPL token transfer. Gas is covered by Zypto.",
     request: {
       chainId: 8453,
       token: "0xde184c7228430cca03a4a5792234a6fc99728ef1",
@@ -99,9 +109,32 @@ const endpoints: Endpoint[] = [
       txHash: "0xabc123def456...",
       blockNumber: 19842301,
       gasUsed: "85000",
-      chain: "Base",
+      chain: 8453,
       note: "Simulated — contract not yet deployed",
     },
+  },
+  {
+    method: "POST",
+    path: "/api/settle  (Solana)",
+    description:
+      "Solana settlement via SPL token transfer. No EIP-3009 — uses base58 signature from user wallet.",
+    request: {
+      chainId: 1399811149,
+      from: "7nPhtNbCGuaNicCurKJpr6KcxCMacKhxxFrwKf1hTWZY",
+      to: "D9m8DMVSgLkht448sR2qQtX9rd5gphZauGmmT34Fxe1G",
+      value: "1000000",
+      mint: "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      signature: "5n3VHHh3KxkwAS9U8MGpZG2Jv1gEERbJbvNpRdf3...",
+    },
+    response: {
+      success: true,
+      signature: "5n3VHHh3KxkwAS9U8MGpZG2Jv1gEERbJbvNpRdf3...",
+      slot: 290000000,
+      chain: 1399811149,
+      confirmations: "finalized",
+      note: "Simulated — Solana program not yet wired",
+    },
+    note: "Solana uses SPL token transfer with base58 signatures. chainId must be 1399811149.",
   },
 ];
 
@@ -124,7 +157,6 @@ function JsonBlock({ obj }: { obj: object }) {
         <code className="text-text-secondary">
           {formatJson(obj).split("\n").map((line, i) => {
             const indent = line.match(/^(\s*)/)?.[1].length ?? 0;
-            const isObject = line.trim().startsWith('"');
             return (
               <div key={i} className={indent === 2 ? "pl-4" : indent === 4 ? "pl-8" : ""}>
                 {line.split(/(".*?":\s*)(.*)/).map((part, j) => {
@@ -198,7 +230,7 @@ export default function ApiReference() {
             const isOpen = openIndex === index;
             return (
               <div
-                key={endpoint.path}
+                key={endpoint.path + index}
                 className="rounded-card border border-border bg-surface overflow-hidden"
               >
                 <button
@@ -231,6 +263,11 @@ export default function ApiReference() {
 
                 {isOpen && (
                   <div className="px-5 pb-5 border-t border-border pt-4 space-y-4">
+                    {endpoint.note && (
+                      <p className="text-xs text-accent bg-accent/10 border border-accent/20 rounded px-3 py-2">
+                        {endpoint.note}
+                      </p>
+                    )}
                     {endpoint.request && (
                       <div>
                         <p className="text-xs font-semibold text-text-muted uppercase tracking-wider mb-2">

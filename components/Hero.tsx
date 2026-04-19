@@ -23,11 +23,12 @@ export default function Hero() {
       .catch(() => {
         // Fallback if API not available
         setStats({
-          totals: { settlements: 12847, volume: "1.24" },
+          totals: { settlements: 12847, volume: "1240000.00" },
           chains: [
             { name: "Base", status: "operational" },
             { name: "BNB Chain", status: "operational" },
             { name: "Ethereum", status: "operational" },
+            { name: "Solana", status: "operational" },
           ],
         });
       });

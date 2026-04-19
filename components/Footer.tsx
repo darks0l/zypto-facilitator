@@ -10,7 +10,11 @@ export default function Footer() {
           {/* Logo + tagline */}
           <div>
             <div className="flex items-center gap-2 mb-2">
-              <span className="text-xl font-bold text-primary">Zypto</span>
+              <img
+                src="/zypto-logo.png"
+                alt="Zypto"
+                className="h-6 w-auto"
+              />
               <span className="text-xs font-mono text-text-secondary">
                 Facilitator
               </span>
