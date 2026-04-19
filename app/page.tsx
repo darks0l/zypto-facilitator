@@ -1,7 +1,7 @@
 import Header from "@/components/Header";
 import Hero from "@/components/Hero";
 import ChainCard from "@/components/ChainCard";
-import HowItWorks from "@/components/HowItWorks";
+import DocsSection from "@/components/DocsSection";
 import CodeExample from "@/components/CodeExample";
 import ApiReference from "@/components/ApiReference";
 import ToolsSection from "@/components/ToolsSection";
@@ -34,7 +34,7 @@ export default function Home() {
         </div>
       </section>
 
-      <HowItWorks />
+      <DocsSection />
       <CodeExample />
       <ApiReference />
       <ToolsSection />

@@ -8,7 +8,7 @@ export default function Header() {
 
   const navLinks = [
     { label: "Facilitator", href: "#hero" },
-    { label: "Docs", href: "#how-it-works" },
+    { label: "Docs", href: "#docs" },
     { label: "API", href: "#api-reference" },
     { label: "Agent", href: "#tools" },
   ];
