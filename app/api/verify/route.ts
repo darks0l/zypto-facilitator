@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server"
-import { CHAINS, SUPPORTED_CHAIN_IDS } from "@/lib/chains"
+import { SUPPORTED_CHAIN_IDS } from "@/lib/chains"
 
 export const runtime = "nodejs"
 
@@ -10,13 +10,11 @@ interface SolVerifyBody {
   from: string
   to: string
   value: string
-  mint: string
-  signature?: string
+  mint?: string
 }
 
 interface EVMVerifyBody {
   chainId: number
-  token: string
   from: string
   to: string
   value: string
@@ -79,22 +77,12 @@ export async function POST(request: NextRequest) {
         )
       }
 
-      // Solana: mint address check
-      const chain = CHAINS["solana"]
-      if (solBody.mint && solBody.mint !== chain.usdc) {
-        return NextResponse.json(
-          { valid: false, error: "unsupported_token", reason: "only USDC on Solana is supported" },
-          { status: 400, headers: { "Access-Control-Allow-Origin": "*" } },
-        )
-      }
-
       return NextResponse.json(
         {
           valid: true,
-          facilitator: chain.pool,
           chain: chainId,
           protocol: "spl",
-          note: "Off-chain validation only — on-chain verification requires Solana RPC",
+          note: "Off-chain validation only",
         },
         { headers: { "Access-Control-Allow-Origin": "*" } },
       )
@@ -107,28 +95,6 @@ export async function POST(request: NextRequest) {
     if (!SUPPORTED_CHAIN_IDS.includes(chainId)) {
       return NextResponse.json(
         { valid: false, error: "unsupported_chain", reason: `chainId ${chainId} not supported` },
-        { status: 400, headers: { "Access-Control-Allow-Origin": "*" } },
-      )
-    }
-
-    const chainKey = Object.keys(CHAINS).find(
-      (k) => CHAINS[k as keyof typeof CHAINS].id === chainId,
-    ) as keyof typeof CHAINS | undefined
-    const chain = chainKey ? CHAINS[chainKey] : null
-    if (!chain) {
-      return NextResponse.json(
-        { valid: false, error: "unsupported_chain", reason: `chain ${chainId} not found` },
-        { status: 400, headers: { "Access-Control-Allow-Origin": "*" } },
-      )
-    }
-
-    if (!evmBody.token || evmBody.token.toLowerCase() !== chain.usdc.toLowerCase()) {
-      return NextResponse.json(
-        {
-          valid: false,
-          error: "unsupported_token",
-          reason: `token does not match expected USDC for chain ${chainId}`,
-        },
         { status: 400, headers: { "Access-Control-Allow-Origin": "*" } },
       )
     }
@@ -154,44 +120,28 @@ export async function POST(request: NextRequest) {
       Number(evmBody.value) <= 0
     ) {
       return NextResponse.json(
-        {
-          valid: false,
-          error: "invalid_params",
-          reason: "value must be a positive numeric string",
-        },
+        { valid: false, error: "invalid_params", reason: "value must be a positive numeric string" },
         { status: 400, headers: { "Access-Control-Allow-Origin": "*" } },
       )
     }
 
     if (evmBody.validAfter === undefined || typeof evmBody.validAfter !== "number") {
       return NextResponse.json(
-        {
-          valid: false,
-          error: "invalid_params",
-          reason: "validAfter is required as a unix timestamp",
-        },
+        { valid: false, error: "invalid_params", reason: "validAfter is required as a unix timestamp" },
         { status: 400, headers: { "Access-Control-Allow-Origin": "*" } },
       )
     }
 
     if (evmBody.validBefore === undefined || typeof evmBody.validBefore !== "number") {
       return NextResponse.json(
-        {
-          valid: false,
-          error: "invalid_params",
-          reason: "validBefore is required as a unix timestamp",
-        },
+        { valid: false, error: "invalid_params", reason: "validBefore is required as a unix timestamp" },
         { status: 400, headers: { "Access-Control-Allow-Origin": "*" } },
       )
     }
 
     if (evmBody.validBefore <= evmBody.validAfter) {
       return NextResponse.json(
-        {
-          valid: false,
-          error: "invalid_params",
-          reason: "validBefore must be greater than validAfter",
-        },
+        { valid: false, error: "invalid_params", reason: "validBefore must be greater than validAfter" },
         { status: 400, headers: { "Access-Control-Allow-Origin": "*" } },
       )
     }
@@ -218,7 +168,7 @@ export async function POST(request: NextRequest) {
     }
 
     return NextResponse.json(
-      { valid: true, facilitator: chain.pool, chain: chainId },
+      { valid: true, chain: chainId },
       { headers: { "Access-Control-Allow-Origin": "*" } },
     )
   } catch (err) {

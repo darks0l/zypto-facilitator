@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import { Copy, Check } from "lucide-react";
-import { CHAINS } from "@/lib/chains";
 
 type TabKey = "curl" | "javascript" | "python" | "solana";
 
@@ -14,33 +13,30 @@ const tabs: { key: TabKey; label: string }[] = [
 ];
 
 function buildCode(lang: TabKey) {
-  const base = CHAINS.base;
   const code: Record<TabKey, string> = {
     curl: `curl -X POST https://facilitator.zypto.com/api/verify \\
   -H "Content-Type: application/json" \\
   -d '{
-    "chainId": ${base.id},
-    "token": "${base.usdc}",
+    "chainId": 8453,
     "from": "0x742d35Cc6634C0532925a3b844Bc9e7595f5a6bE",
-    "to": "${base.pool}",
+    "to": "0x_resource_server_address_",
     "value": "1000000",
     "validAfter": 0,
     "validBefore": 1747700000,
-    "nonce": "0xabcd1234efgh5678"
+    "nonce": "0x_unique_per_transaction"
   }'`,
 
     javascript: `const res = await fetch('https://facilitator.zypto.com/api/verify', {
   method: 'POST',
   headers: { 'Content-Type': 'application/json' },
   body: JSON.stringify({
-    chainId: ${base.id},
-    token: '${base.usdc}',
+    chainId: 8453,
     from: '0x742d35Cc6634C0532925a3b844Bc9e7595f5a6bE',
-    to: '${base.pool}',
+    to: '0x_resource_server_address_',
     value: '1000000',
     validAfter: 0,
     validBefore: 1747700000,
-    nonce: '0xabcd1234efgh5678'
+    nonce: '0x_unique_per_transaction'
   })
 });
 
@@ -53,38 +49,36 @@ res = requests.post(
     'https://facilitator.zypto.com/api/verify',
     headers={'Content-Type': 'application/json'},
     json={
-        'chainId': ${base.id},
-        'token': '${base.usdc}',
+        'chainId': 8453,
         'from': '0x742d35Cc6634C0532925a3b844Bc9e7595f5a6bE',
-        'to': '${base.pool}',
+        'to': '0x_resource_server_address_',
         'value': '1000000',
         'validAfter': 0,
         'validBefore': 1747700000,
-        'nonce': '0xabcd1234efgh5678'
+        'nonce': '0x_unique_per_transaction'
     }
 )
 
 data = res.json()
 print(f"Verified: {data['valid']}")`,
 
-    solana: `# Solana: verify + settle via SPL token transfer
+    solana: `# Solana: SPL token transfer via x402
 # chainId = 1399811149 (Solana mainnet)
-# Uses base58 addresses + base58 signature from wallet
 
-const response = await fetch('https://facilitator.zypto.com/api/verify', {
+const res = await fetch('https://facilitator.zypto.com/api/verify', {
   method: 'POST',
   headers: { 'Content-Type': 'application/json' },
   body: JSON.stringify({
     chainId: 1399811149,
-    from: '7nPhtNbCGuaNicCurKJpr6KcxCMacKhxxFrwKf1hTWZY',
-    to: 'D9m8DMVSgLkht448sR2qQtX9rd5gphZauGmmT34Fxe1G',
+    from: '<sender_base58_address>',
+    to: '<recipient_base58_address>',
     value: '1000000',
-    mint: 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v'
+    mint: '<SPL_mint_address>'
   })
-})
+});
 
-const { valid, facilitator } = await response.json()
-console.log('Solana payment valid:', valid)`,
+const { valid, facilitator } = await res.json();
+console.log('Solana payment valid:', valid);`,
   };
   return code[lang];
 }
