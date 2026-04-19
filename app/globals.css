@@ -1,0 +1,132 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: #050507;
+  --surface: #0d0d14;
+  --border: #1a1a2e;
+  --primary: #00D4AA;
+  --secondary: #4F8EF7;
+  --accent: #7B61FF;
+  --text-primary: #FFFFFF;
+  --text-secondary: #8B8B9E;
+  --text-muted: #4A4A5C;
+  --success: #00D4AA;
+  --error: #FF6B6B;
+  --warning: #FFB84D;
+}
+
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+html,
+body {
+  max-width: 100vw;
+  overflow-x: hidden;
+  background-color: var(--background);
+  color: var(--text-primary);
+  font-family: var(--font-inter), system-ui, sans-serif;
+}
+
+body {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--background);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-muted);
+}
+
+/* Code block styling */
+pre {
+  background: var(--surface) !important;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 16px;
+  overflow-x: auto;
+  font-family: var(--font-jetbrains), monospace;
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+code {
+  font-family: var(--font-jetbrains), monospace;
+}
+
+/* JSON syntax highlighting */
+.json-key {
+  color: #4F8EF7;
+}
+.json-string {
+  color: #00D4AA;
+}
+.json-number {
+  color: #FFB84D;
+}
+.json-boolean {
+  color: #7B61FF;
+}
+.json-null {
+  color: #8B8B9E;
+}
+
+/* Pulse dot animation */
+.pulse-dot {
+  animation: pulseDot 2s ease-in-out infinite;
+}
+
+@keyframes pulseDot {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+
+/* Fade up animation */
+.animate-fade-up {
+  animation: fadeUp 0.5s ease-out forwards;
+}
+
+@keyframes fadeUp {
+  0% { opacity: 0; transform: translateY(20px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+/* Stagger children */
+.stagger-children > * {
+  opacity: 0;
+  animation: fadeUp 0.5s ease-out forwards;
+}
+.stagger-children > *:nth-child(1) { animation-delay: 0.1s; }
+.stagger-children > *:nth-child(2) { animation-delay: 0.2s; }
+.stagger-children > *:nth-child(3) { animation-delay: 0.3s; }
+.stagger-children > *:nth-child(4) { animation-delay: 0.4s; }
+.stagger-children > *:nth-child(5) { animation-delay: 0.5s; }
+.stagger-children > *:nth-child(6) { animation-delay: 0.6s; }
+
+/* How it works connector line */
+.how-it-works-line {
+  position: relative;
+  flex: 1;
+  height: 2px;
+  background: linear-gradient(90deg, var(--primary) 0%, var(--secondary) 100%);
+  opacity: 0.3;
+}
